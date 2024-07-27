@@ -1,5 +1,4 @@
 
-
 public class Game {
 
     private Board board;
@@ -12,9 +11,12 @@ public class Game {
     }
 
     public Game(Player p1, Player p2) {
-
+        first = p1;
+        second = p2;
+        current = p1;
     }
 
+    //setters/getters
     public void setBoard(Board board) {
         this.board = board;
     }
@@ -27,19 +29,27 @@ public class Game {
     public void setCurrent(Player current) {
         this.current = current;
     }
+    public Board getBoard() {
+        return board;
+    }
+    public Player getFirst() {
+        return first;
+    }
+    public Player getSecond() {
+        return second;
+    }
+    public Player getCurrent() {
+        return current;
+    }
 
 
     public void start() {
 
-        System.out.println("""
-                \t1. Start a New Game
-                \t2. Quit
-                \t3. Load a Game""");
-
 
     }
 
-    public Board load() {
+    public static Board load() {
+        Board board = new Board();
         return board;
     }
 
