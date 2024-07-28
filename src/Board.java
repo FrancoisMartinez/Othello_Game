@@ -7,7 +7,7 @@ public class Board {
     public Board() {
         name = "";
         boardPieces = new Position[8][8];
-
+        initializeBoard();
     }
     public Board(String name, Position[][] boardPieces) {
 
@@ -23,9 +23,9 @@ public class Board {
         this.name = name;
     }
     public void  setBoardPieces(Position[][] boardPieces) {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                this.boardPieces[i][j] = boardPieces[i][j];
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                this.boardPieces[row][col] = boardPieces[row][col];
             }
         }
     }
@@ -34,32 +34,57 @@ public class Board {
     }
     public Position[][] getBoardPieces() {
         Position[][] copy = new Position[8][8];
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                copy[i][j] = boardPieces[i][j];
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                copy[row][col] = boardPieces[row][col];
             }
         }
         return copy;
     }
 
+    //initialize board with default starting position and unplayable positions
+    private void initializeBoard() {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                boardPieces[row][col] = new PlayablePosition();
+            }
+        }
+        for (int row = 2; row < 6; row++) {
+            boardPieces[row][7] = new UnplayablePosition();
+        }
+        boardPieces[3][3].setPiece(Position.WHITE);
+        boardPieces[3][4].setPiece(Position.BLACK);
+        boardPieces[4][3].setPiece(Position.BLACK);
+        boardPieces[4][4].setPiece(Position.WHITE);
 
+    }
+
+    //draw board with coordinates
     public void drawboard() {
 
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                System.out.print(boardPieces[i][j]);
+        System.out.print(" ");
+        for(char c = 'A'; c <= 'H'; c++) {
+            System.out.print(" " + c);
+        }
+        System.out.println();
+        for (int row = 0; row < 8; row++) {
+            System.out.print(row + 1);
+            for (int col = 0; col < 8; col++) {
+                System.out.print(" " + boardPieces[row][col]);
             }
             System.out.println();
         }
-
-
     }
+
+
 
     public Board(String saveFile) {
 
     }
 
     public void takeTurn(Player current) {
+
+
 
     }
 

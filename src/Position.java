@@ -24,4 +24,8 @@ abstract public class Position {
 
     public abstract boolean canPlay();
 
+    public String toString() {
+        return "" + piece;
+    }
+
 }
