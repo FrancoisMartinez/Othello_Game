@@ -1,5 +1,10 @@
+import java.util.Objects;
+import java.util.Scanner;
+
 
 public class Game {
+
+    Scanner s = new Scanner(System.in);
 
     private Board board;
     private Player first;
@@ -8,6 +13,9 @@ public class Game {
 
     public Game() {
         board = new Board();
+        first = new Player("p1");
+        second = new Player("p2");
+        current = first;
     }
 
     public Game(Player p1, Player p2) {
@@ -56,23 +64,62 @@ public class Game {
 
     public void play() {
 
+
+
+        while (checkForMoves()) {
+
+            board.drawboard();
+
+            System.out.println(current + "'s move");
+
+            makeMove(s.nextLine());
+
+            if (current.equals(first)) {
+                current = second;
+            } else {
+                current = first;
+            }
+
+        }
+
+
+
     }
 
-    public void makeMove(String coor) {
+    public void makeMove(String s) {
 
-        int row = Character.getNumericValue(coor.charAt(1)) - 1;
-        int col = (int) Character.toLowerCase(coor.charAt(0)) - 97;
+        int row = coor(s)[0];
+        int col = coor(s)[1];
 
-        board.getBoardPieces()[row][col].setPiece(Position.BLACK);
+
+        //set piece of current player based on coordinate if playable
+        if (board.getBoardPieces()[row][col].canPlay()) {
+            board.getBoardPieces()[row][col].setPiece((current.equals(first) ? Position.BLACK : Position.WHITE));
+
+        } else {
+            System.out.println("unplayable position");
+        }
+
     }
 
     public boolean conversion(String coor) {
 
+
         return true;
     }
 
-    public boolean moves() {
+    public boolean checkForMoves() {
         return true;
+    }
+
+    //get row and col from coordinate
+    private int[] coor(String s) {
+        int[] xy = new int[2];
+        xy[0] = Character.getNumericValue(s.charAt(1)) - 1;
+        xy[1] = (int) Character.toLowerCase(s.charAt(0)) - 97;
+
+        return xy;
+
     }
 
     private void save() {

@@ -3,7 +3,7 @@ public class Player {
     private String name;
 
     public Player() {
-        name = "";
+        name = "player";
     }
     public Player(String name) {
         this.name = name;
@@ -19,6 +19,12 @@ public class Player {
     public String toString() {
         return name;
     }
+
+    /**
+    public boolean equals(Player player) {
+        return this.name.equals(player.name);
+    }
+     */
 
 }
 

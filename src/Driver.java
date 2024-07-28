@@ -29,12 +29,8 @@ public class Driver {
         }
 
         */
-        game.getBoard().drawboard();
 
-
-        game.makeMove("b2");
-
-        game.getBoard().drawboard();
+        game.play();
 
 
 
