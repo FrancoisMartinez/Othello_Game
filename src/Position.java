@@ -28,6 +28,12 @@ abstract public class Position {
         return "" + piece;
     }
 
-
+    //get row and col from coordinate
+    public static int[] coordinates(String coor) {
+        int[] xy = new int[2];
+        xy[0] = Character.getNumericValue(coor.charAt(1)) - 1;
+        xy[1] = (int) Character.toLowerCase(coor.charAt(0)) - 97;
+        return xy;
+    }
 
 }
