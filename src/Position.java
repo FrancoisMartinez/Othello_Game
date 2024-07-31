@@ -28,4 +28,6 @@ abstract public class Position {
         return "" + piece;
     }
 
+
+
 }
