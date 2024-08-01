@@ -53,8 +53,30 @@ public class Game {
 
 
     public void start() {
+        System.out.println("""
+                \t1. Start a New Game
+                \t2. Quit
+                \t3. Load a  Game""");
 
+        String in = s.nextLine();
 
+        if (in.equals("1")) {
+            System.out.println("Starting a new game...");
+            System.out.println("Player 1: ");
+            first.setName(s.nextLine());
+            System.out.println("Player 2: ");
+            second.setName(s.nextLine());
+            play();
+        } else if (in.equals("2")) {
+            System.out.println("Quiting game...");
+            System.exit(0);
+        } else if (in.equals("3")) {
+            System.out.println("Enter file name:");
+
+        } else {
+            System.out.println("Invalid input, enter a number from 1 to 3.");
+            start();
+        }
     }
 
     public static Board load() {
@@ -74,11 +96,7 @@ public class Game {
 
             makeMove(s.nextLine());
 
-            if (current.equals(first)) {
-                current = second;
-            } else {
-                current = first;
-            }
+
 
         }
 
