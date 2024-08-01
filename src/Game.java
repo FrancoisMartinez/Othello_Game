@@ -13,8 +13,8 @@ public class Game {
 
     public Game() {
         board = new Board();
-        first = new Player("p1");
-        second = new Player("p2");
+        first = new Player("p1", Position.BLACK);
+        second = new Player("p2", Position.WHITE);
         current = first;
     }
 
@@ -111,14 +111,61 @@ public class Game {
     public void play() {
 
 
+        boolean end = false;
 
-        while (checkForMoves()) {
 
+        while (!end) {
+
+            end = ended();
             board.drawboard();
+//
+//            System.out.println(current + "'s move");
+//
+//            makeMove(s.nextLine());
 
-            System.out.println(current + "'s move");
+            if (!checkForMoves()) {
+                System.out.println("""
+                        1. Save game
+                        2. Concede game
+                        3. Forfeit turn""");
+                String noMove = s.nextLine();
 
-            makeMove(s.nextLine());
+                switch (noMove) {
+                    case "1" -> {
+                        System.out.println("Saving game...");
+                    }
+                    case "2" -> {
+                        end = true;
+                        System.out.println(current + " has conceded the game.");
+                    }
+                    case "3" -> {
+                        System.out.println("other player turn");
+                        current = current == first ? second : first;
+                    }
+                    default -> System.out.println("Invalid input");
+                }
+
+            } else {
+                System.out.println("""
+                        1. Save game
+                        2. Concede game
+                        3. Make move""");
+                String move = s.nextLine();
+
+                switch (move) {
+                    case "1" -> {
+                        System.out.println("Saving game...");
+                    }
+                    case "2" -> {
+                        end = true;
+                        System.out.println(current + " has conceded the game.");
+                    }
+                    case "3" -> {
+                        board.takeTurn(current);
+                    }
+                    default -> System.out.println("Invalid input");
+                }
+            }
 
 
 
@@ -151,6 +198,10 @@ public class Game {
         return true;
     }
 
+    public boolean ended() {
+
+        return false;
+    }
 
 
     private void save() {

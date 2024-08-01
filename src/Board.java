@@ -1,4 +1,8 @@
+import java.util.Scanner;
+
 public class Board {
+
+    Scanner s = new Scanner(System.in);
 
     private String name;
     private Position[][] boardPieces;
@@ -293,7 +297,24 @@ public class Board {
 
     public void takeTurn(Player current) {
 
+        char color = current.getColor();
+
+        String coor = s.nextLine();
+
+        int row = Position.coordinates(coor)[0];
+        int col = Position.coordinates(coor)[1];
+
+
+        //set piece of current player based on coordinate if playable
+        if (boardPieces[row][col].canPlay() && flipPiece(coor, color)) {
+            boardPieces[row][col].setPiece(color);
+
+        } else {
+            System.out.println("unplayable position");
+        }
+
     }
+
 
     //public Game(String name) {
 
