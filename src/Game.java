@@ -199,7 +199,31 @@ public class Game {
 
 
     public boolean checkForMoves() {
-        return true;
+
+        boolean hasMove = false;
+
+        //create array with all coordinates
+        String[][] coordinates = new String[8][8];
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                coordinates[row][col] = "" + ((char) ('A' + col)) + (row + 1);
+            }
+        }
+
+        //check for all coordinates if ther is a valid move
+        outerLoop:
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+
+                if (board.getBoardPieces()[row][col].canPlay() && board.flipPiece(coordinates[row][col], current.getColor())) {
+                    System.out.println(coordinates[row][col]);
+                    hasMove = true;
+                    break outerLoop;
+                }
+
+            }
+        }
+        return hasMove;
     }
 
     public boolean ended() {
