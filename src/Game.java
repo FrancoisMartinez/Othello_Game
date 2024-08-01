@@ -124,10 +124,11 @@ public class Game {
 //            makeMove(s.nextLine());
 
             if (!checkForMoves()) {
-                System.out.println("""
+                System.out.printf("""
+                        Player %s turn
                         1. Save game
                         2. Concede game
-                        3. Forfeit turn""");
+                        3. Forfeit turn%n""", current);
                 String noMove = s.nextLine();
 
                 switch (noMove) {
@@ -146,10 +147,12 @@ public class Game {
                 }
 
             } else {
-                System.out.println("""
+
+                System.out.printf("""
+                        Player %s turn
                         1. Save game
                         2. Concede game
-                        3. Make move""");
+                        3. Make move%n""", current);
                 String move = s.nextLine();
 
                 switch (move) {
@@ -162,6 +165,7 @@ public class Game {
                     }
                     case "3" -> {
                         board.takeTurn(current);
+                        current = current == first ? second : first;
                     }
                     default -> System.out.println("Invalid input");
                 }
