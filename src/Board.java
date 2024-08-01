@@ -7,7 +7,7 @@ public class Board {
     public Board() {
         name = "";
         boardPieces = new Position[8][8];
-        initializeBoard();
+        initializeBoard("1");
     }
     public Board(String name, Position[][] boardPieces) {
 
@@ -43,7 +43,7 @@ public class Board {
     }
 
     //initialize board with default starting position and unplayable positions
-    private void initializeBoard() {
+    public void initializeBoard(String pos) {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 boardPieces[row][col] = new PlayablePosition();
@@ -52,10 +52,41 @@ public class Board {
         for (int row = 2; row < 6; row++) {
             boardPieces[row][7] = new UnplayablePosition();
         }
-        boardPieces[3][3].setPiece(Position.WHITE);
-        boardPieces[3][4].setPiece(Position.BLACK);
-        boardPieces[4][3].setPiece(Position.BLACK);
-        boardPieces[4][4].setPiece(Position.WHITE);
+
+        switch (pos) {
+            case "1" -> {
+                boardPieces[3][3].setPiece(Position.WHITE);
+                boardPieces[3][4].setPiece(Position.BLACK);
+                boardPieces[4][3].setPiece(Position.BLACK);
+                boardPieces[4][4].setPiece(Position.WHITE);
+            }
+            case "21" -> {
+                boardPieces[2][2].setPiece(Position.WHITE);
+                boardPieces[2][3].setPiece(Position.BLACK);
+                boardPieces[3][2].setPiece(Position.BLACK);
+                boardPieces[3][3].setPiece(Position.WHITE);
+            }
+            case "22" -> {
+                boardPieces[2][4].setPiece(Position.WHITE);
+                boardPieces[2][5].setPiece(Position.BLACK);
+                boardPieces[3][4].setPiece(Position.BLACK);
+                boardPieces[3][5].setPiece(Position.WHITE);
+            }
+            case "23" -> {
+                boardPieces[4][2].setPiece(Position.WHITE);
+                boardPieces[4][3].setPiece(Position.BLACK);
+                boardPieces[5][2].setPiece(Position.BLACK);
+                boardPieces[5][3].setPiece(Position.WHITE);
+            }
+            case "24" -> {
+                boardPieces[4][4].setPiece(Position.WHITE);
+                boardPieces[4][5].setPiece(Position.BLACK);
+                boardPieces[5][4].setPiece(Position.BLACK);
+                boardPieces[5][5].setPiece(Position.WHITE);
+            }
+        }
+
+
 
     }
 
@@ -261,9 +292,6 @@ public class Board {
     }
 
     public void takeTurn(Player current) {
-
-
-
 
     }
 

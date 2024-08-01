@@ -18,6 +18,7 @@ public class Game {
         current = first;
     }
 
+/**
     public Game(Player p1, Player p2) {
         first = p1;
         second = p2;
@@ -50,9 +51,10 @@ public class Game {
     public Player getCurrent() {
         return current;
     }
-
+*/
 
     public void start() {
+
         System.out.println("""
                 \t1. Start a New Game
                 \t2. Quit
@@ -61,18 +63,40 @@ public class Game {
         String in = s.nextLine();
 
         if (in.equals("1")) {
+
             System.out.println("Starting a new game...");
             System.out.println("Player 1: ");
             first.setName(s.nextLine());
             System.out.println("Player 2: ");
             second.setName(s.nextLine());
+
+            System.out.println("""
+                \t1. Standard Positions
+                \t2. Offset Starting Position""");
+
+            String pos = s.nextLine();
+            String offset = "";
+            if (pos.equals("1")) {
+                play();
+            } if (pos.equals("2")) {
+                System.out.println("""
+                \t1. Offset top right
+                \t2. Offset top left
+                \t3. Offset bottom right
+                \t4. Offset bottom left""");
+                offset = s.nextLine();
+            }
+            board.initializeBoard(pos + offset);
+
             play();
+
+
         } else if (in.equals("2")) {
             System.out.println("Quiting game...");
             System.exit(0);
         } else if (in.equals("3")) {
             System.out.println("Enter file name:");
-
+            load();
         } else {
             System.out.println("Invalid input, enter a number from 1 to 3.");
             start();
