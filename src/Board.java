@@ -2,8 +2,7 @@ import java.util.Scanner;
 
 public class Board {
 
-    Scanner s = new Scanner(System.in);
-
+    private final Scanner s = new Scanner(System.in);
     private String name;
     private Position[][] boardPieces;
 
@@ -45,6 +44,8 @@ public class Board {
         }
         return copy;
     }
+
+
 
     //initialize board with default starting position and unplayable positions
     public void initializeBoard(String pos) {
@@ -89,10 +90,8 @@ public class Board {
                 boardPieces[5][5].setPiece(Position.WHITE);
             }
         }
-
-
-
     }
+
 
     //draw board with coordinates
     public void drawboard() {
@@ -111,6 +110,129 @@ public class Board {
         }
     }
 
+    public boolean isValid(String coor, char color) {
+
+        int row = Position.coordinates(coor)[0];
+        int col = Position.coordinates(coor)[1];
+
+        int i;
+        int j;
+
+        char opposite = color == Position.BLACK ? Position.WHITE : Position.BLACK;
+
+        boolean valid = false;
+
+        //for all direction check if move is playable and converts any piece
+
+        //check left
+        if (col > 0) {
+            j = col - 1;
+            while (opposite == boardPieces[row][j].getPiece()) {
+                j -= 1;
+            }
+            if (boardPieces[row][j].getPiece() == color && j != col && j != col - 1 ) {
+                valid = true;
+
+            }
+        }
+
+
+
+        //check right
+        if (col < 7) {
+            j = col + 1;
+            while (opposite == boardPieces[row][j].getPiece()) {
+                j += 1;
+            }
+            if (boardPieces[row][j].getPiece() == color && j != col && j != col + 1) {
+                valid = true;
+            }
+        }
+
+
+
+        //check top
+        if (row > 0) {
+            i = row - 1;
+            while (opposite == boardPieces[i][col].getPiece()) {
+                i -= 1;
+            }
+            if (boardPieces[i][col].getPiece() == color && i != row && i != row - 1 ) {
+                valid = true;
+            }
+        }
+
+
+
+        //check bottom
+        if (row < 7) {
+            i = row + 1;
+            while (opposite == boardPieces[i][col].getPiece()) {
+                i += 1;
+            }
+            if (boardPieces[i][col].getPiece() == color && i != row && i != row + 1 ) {
+                valid = true;
+            }
+        }
+
+
+        //check top left
+        if (row > 0 && col > 0) {
+            i = row - 1;
+            j = col - 1;
+            while (opposite == boardPieces[i][j].getPiece()) {
+                i -= 1;
+                j -= 1;
+            }
+            if (boardPieces[i][j].getPiece() == color && i != row && i != row - 1 && j != col && j != col - 1) {
+                valid = true;
+            }
+        }
+
+
+        //check top right
+        if (row > 0 && col < 7) {
+            i = row - 1;
+            j = col + 1;
+            while (opposite == boardPieces[i][j].getPiece()) {
+                i -= 1;
+                j += 1;
+            }
+            if (boardPieces[i][j].getPiece() == color && i != row && i != row - 1 && j != col && j != col + 1) {
+                valid = true;
+            }
+        }
+
+
+        //check bottom left
+        if (row < 7 && col > 0) {
+            i = row + 1;
+            j = col - 1;
+            while (opposite == boardPieces[i][j].getPiece()) {
+                i += 1;
+                j -= 1;
+            }
+            if (boardPieces[i][j].getPiece() == color && i != row && i != row + 1 && j != col && j != col - 1) {
+                valid = true;
+            }
+        }
+
+        //check bottom right
+        if (row < 7 && col < 7) {
+            i = row + 1;
+            j = col + 1;
+            while (opposite == boardPieces[i][j].getPiece()) {
+                i += 1;
+                j += 1;
+            }
+            if (boardPieces[i][j].getPiece() == color && i != row && i != row + 1 && j != col && j != col + 1) {
+                valid = true;
+            }
+        }
+
+        return valid;
+    }
+
 
     public boolean flipPiece(String coor, char color) {
 
@@ -120,7 +242,7 @@ public class Board {
         int i;
         int j;
 
-        char opposite =  color == Position.BLACK ? Position.WHITE : Position.BLACK;
+        char opposite = color == Position.BLACK ? Position.WHITE : Position.BLACK;
 
         boolean valid = false;
 
@@ -295,11 +417,9 @@ public class Board {
 
     }
 
-    public void takeTurn(Player current) {
+    public void takeTurn(String coor, Player current) {
 
         char color = current.getColor();
-
-        String coor = s.nextLine();
 
         int row = Position.coordinates(coor)[0];
         int col = Position.coordinates(coor)[1];

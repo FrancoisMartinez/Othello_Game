@@ -53,6 +53,7 @@ public class Game {
     }
 */
 
+
     public void start() {
 
         System.out.println("""
@@ -118,10 +119,6 @@ public class Game {
 
             end = ended();
             board.drawboard();
-//
-//            System.out.println(current + "'s move");
-//
-//            makeMove(s.nextLine());
 
             if (!checkForMoves()) {
                 System.out.printf("""
@@ -164,8 +161,12 @@ public class Game {
                         System.out.println(current + " has conceded the game.");
                     }
                     case "3" -> {
-                        board.takeTurn(current);
-                        current = current == first ? second : first;
+                        System.out.println("Enter your move in the format column/row (eg. b2): ");
+                        String coor = s.nextLine();
+                        if (board.isValid(coor, current.getColor())) {
+                            board.takeTurn(coor, current);
+                            current = current == first ? second : first;
+                        }
                     }
                     default -> System.out.println("Invalid input");
                 }
@@ -215,8 +216,7 @@ public class Game {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
 
-                if (board.getBoardPieces()[row][col].canPlay() && board.flipPiece(coordinates[row][col], current.getColor())) {
-                    System.out.println(coordinates[row][col]);
+                if (board.getBoardPieces()[row][col].canPlay() && board.isValid(coordinates[row][col], current.getColor())) {
                     hasMove = true;
                     break outerLoop;
                 }
@@ -229,6 +229,13 @@ public class Game {
     public boolean ended() {
 
         return false;
+    }
+
+    public void switchPlayer(String coor) {
+
+        if (board.isValid(coor, current.getColor())) {
+            current = current == first ? second : first;
+        }
     }
 
 
