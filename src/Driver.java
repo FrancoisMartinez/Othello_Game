@@ -1,5 +1,6 @@
 import java.util.Scanner;
 
+//complete Othello game with saving and loading ability
 public class Driver {
     public static void main(String[] args) {
 
@@ -14,6 +15,7 @@ public class Driver {
 
         do {
             switch (in) {
+                //Start new game
                 case "1" -> {
 
                     System.out.println("Starting a new game...");
@@ -26,15 +28,18 @@ public class Driver {
 
                     game.start();
                 }
+                //Quit
                 case "2" -> {
                     System.out.println("Quiting...");
                     System.exit(0);
                 }
+                //Load
                 case "3" -> {
                     Game.load();
                 }
                 default -> System.out.println("Invalid input, enter a number from 1 to 3.");
             }
+        //ask again if input is invalid
         } while (!in.equals("1") && !in.equals("2") && !in.equals("3"));
 
 

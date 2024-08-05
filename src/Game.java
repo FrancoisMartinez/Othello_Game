@@ -1,7 +1,13 @@
-import java.io.*;
-import java.util.Scanner;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
 
+
+
+//handle
 public class Game {
 
     private static final Scanner s = new Scanner(System.in);
@@ -11,13 +17,14 @@ public class Game {
     private Player second;
     private Player current;
 
+    //default constructor
     public Game() {
         board = new Board();
         first = new Player("p1", Position.BLACK);
         second = new Player("p2", Position.WHITE);
         current = first;
     }
-
+    //constructor
     public Game(Player p1, Player p2) {
         first = p1;
         second = p2;
@@ -25,7 +32,7 @@ public class Game {
         board = new Board();
     }
 
-
+    //the start method ask the user the starting position for the new game
     public void start() {
 
         System.out.println("""
@@ -49,7 +56,8 @@ public class Game {
         play();
     }
 
-//uml says Board return type, but could be void
+    //uml says Board return type, but could be void
+    //load game from file
     public static Board load() {
 
         System.out.println("Enter filename: ");
@@ -57,8 +65,10 @@ public class Game {
 
         Game game = new Game();
 
+        //call the method to set the game
         game.board = new Board(saveFile);
 
+        //set the first, second and current player
         try (BufferedReader reader = new BufferedReader(new FileReader(saveFile))) {
             String line;
             int i = 0;
@@ -76,12 +86,13 @@ public class Game {
             e.printStackTrace();
         }
 
+        //start the game
         game.play();
 
         return game.board;
     }
 
-
+    //handle playing, saving and conceding the game
     public void play() {
 
 
@@ -92,6 +103,7 @@ public class Game {
 
             board.drawBoard();
 
+            //current player has no move available
             if (!checkForMoves()) {
                 System.out.printf("""
                         Player %s turn
@@ -100,24 +112,28 @@ public class Game {
                         3. Forfeit turn%n""", current);
                 String noMove = s.nextLine();
 
+
                 switch (noMove) {
+                    //save
                     case "1" -> {
                         System.out.println("Enter FileName:");
                         save(s.nextLine());
                         System.out.println("Saving game...");
                         end = true;
                     }
+                    //concede
                     case "2" -> {
                         end = true;
                         System.out.println(current + " has conceded the game.");
                     }
+                    //next turn
                     case "3" -> {
-                        System.out.println("other player turn");
+                        //switch player
                         current = current == first ? second : first;
                     }
                     default -> System.out.println("Invalid input");
                 }
-
+            //player can move
             } else {
 
                 System.out.printf("""
@@ -128,19 +144,23 @@ public class Game {
                 String move = s.nextLine();
 
                 switch (move) {
+                    //save
                     case "1" -> {
                         System.out.println("Enter FileName:");
                         save(s.nextLine());
                         System.out.println("Saving game...");
                         end = true;
                     }
+                    //concede
                     case "2" -> {
                         end = true;
                         System.out.println(current + " has conceded the game.");
                     }
+                    //play
                     case "3" -> {
                         System.out.println("Enter your move in the format column/row (eg. b2): ");
                         String coor = s.nextLine();
+                        //verify move validity and switch player
                         if (board.isValid(coor, current.getColor())) {
                             board.takeTurn(coor, current);
                             current = current == first ? second : first;
@@ -155,7 +175,7 @@ public class Game {
         }
     }
 
-
+    //save game to a file
     private void save(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             writer.write(first.getName());
@@ -171,11 +191,8 @@ public class Game {
     }
 
 
-
-
-
-
-    public boolean checkForMoves() {
+    //check if current player can move a piece
+    private boolean checkForMoves() {
 
         boolean hasMove = false;
 
@@ -191,7 +208,7 @@ public class Game {
         outerLoop:
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-
+                //check if playable square and if valid move
                 if (board.getBoardPieces()[row][col].canPlay() && board.isValid(coordinates[row][col], current.getColor())) {
                     hasMove = true;
                     break outerLoop;
@@ -202,16 +219,17 @@ public class Game {
         return hasMove;
     }
 
-
-    public boolean ended() {
+    //check if game has ended and handle the winner and end message
+    private boolean ended() {
 
         boolean ended;
-
+        //checks move for both player
         current = current == first ? second : first;
         ended = !checkForMoves();
         current = current == first ? second : first;
         ended |= !checkForMoves();
 
+        //if ended, count the pieces of both player
         if (ended) {
             int black = 0;
             int white = 0;
@@ -226,10 +244,11 @@ public class Game {
                 }
             }
 
+
             String winner = "";
 
             boolean tie = false;
-
+            //determine winner
             if (black > white) winner = first.getName();
             else if (white > black) winner = second.getName();
             else if (white == black) tie = true;
@@ -245,6 +264,5 @@ public class Game {
 
         return ended;
     }
-
 
 }
