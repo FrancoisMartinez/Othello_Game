@@ -1,10 +1,10 @@
-import java.util.Objects;
+import java.io.*;
 import java.util.Scanner;
-
+import java.io.IOException;
 
 public class Game {
 
-    Scanner s = new Scanner(System.in);
+    private static final Scanner s = new Scanner(System.in);
 
     private Board board;
     private Player first;
@@ -18,7 +18,6 @@ public class Game {
         current = first;
     }
 
-/**
     public Game(Player p1, Player p2) {
         first = p1;
         second = p2;
@@ -26,98 +25,71 @@ public class Game {
         board = new Board();
     }
 
-    //setters/getters
-    public void setBoard(Board board) {
-        this.board = board;
-    }
-    public void setFirst(Player p1) {
-        first = p1;
-    }
-    public void setSecond(Player p2) {
-        second = p2;
-    }
-    public void setCurrent(Player current) {
-        this.current = current;
-    }
-    public Board getBoard() {
-        return board;
-    }
-    public Player getFirst() {
-        return first;
-    }
-    public Player getSecond() {
-        return second;
-    }
-    public Player getCurrent() {
-        return current;
-    }
-*/
-
 
     public void start() {
 
         System.out.println("""
-                \t1. Start a New Game
-                \t2. Quit
-                \t3. Load a  Game""");
-
-        String in = s.nextLine();
-
-        if (in.equals("1")) {
-
-            System.out.println("Starting a new game...");
-            System.out.println("Player 1: ");
-            first.setName(s.nextLine());
-            System.out.println("Player 2: ");
-            second.setName(s.nextLine());
-
-            System.out.println("""
                 \t1. Standard Positions
                 \t2. Offset Starting Position""");
 
-            String pos = s.nextLine();
-            String offset = "";
-            if (pos.equals("1")) {
-                play();
-            } if (pos.equals("2")) {
-                System.out.println("""
+        String pos = s.nextLine();
+        String offset = "";
+        if (pos.equals("1")) {
+            play();
+        } if (pos.equals("2")) {
+            System.out.println("""
                 \t1. Offset top right
                 \t2. Offset top left
                 \t3. Offset bottom right
                 \t4. Offset bottom left""");
-                offset = s.nextLine();
-            }
-            board.initializeBoard(pos + offset);
-
-            play();
-
-
-        } else if (in.equals("2")) {
-            System.out.println("Quiting game...");
-            System.exit(0);
-        } else if (in.equals("3")) {
-            System.out.println("Enter file name:");
-            load();
-        } else {
-            System.out.println("Invalid input, enter a number from 1 to 3.");
-            start();
+            offset = s.nextLine();
         }
+        board.initializeBoard(pos + offset);
+
+        play();
     }
 
+//uml says Board return type, but could be void
     public static Board load() {
-        Board board = new Board();
-        return board;
+
+        System.out.println("Enter filename: ");
+        String saveFile = s.nextLine();
+
+        Game game = new Game();
+
+        game.board = new Board(saveFile);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(saveFile))) {
+            String line;
+            int i = 0;
+            while ((line = reader.readLine()) != null) {
+                if (i == 0) {
+                    game.first = new Player(line, Position.BLACK);
+                } else if (i == 1) {
+                    game.second = new Player(line, Position.WHITE);
+                } else if (i == 2) {
+                    game.current = line.equals(game.first.getName()) ? game.first : game.second;
+                }
+                i++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        game.play();
+
+        return game.board;
     }
+
 
     public void play() {
 
 
-        boolean end = false;
+        boolean end = ended();
 
 
         while (!end) {
 
-            end = ended();
             board.drawboard();
 
             if (!checkForMoves()) {
@@ -130,7 +102,10 @@ public class Game {
 
                 switch (noMove) {
                     case "1" -> {
+                        System.out.println("Enter FileName:");
+                        save(s.nextLine());
                         System.out.println("Saving game...");
+                        end = true;
                     }
                     case "2" -> {
                         end = true;
@@ -154,7 +129,10 @@ public class Game {
 
                 switch (move) {
                     case "1" -> {
+                        System.out.println("Enter FileName:");
+                        save(s.nextLine());
                         System.out.println("Saving game...");
+                        end = true;
                     }
                     case "2" -> {
                         end = true;
@@ -171,14 +149,29 @@ public class Game {
                     default -> System.out.println("Invalid input");
                 }
             }
-
-
-
+            end = ended();
         }
-
-
-
     }
+
+
+    private void save(String filename) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            writer.write(first.getName());
+            writer.newLine();
+            writer.write(first.getName());
+            writer.newLine();
+            writer.write(current.getName());
+            writer.newLine();
+            writer.write(board.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
 
     public void makeMove(String coor) {
 
@@ -195,9 +188,6 @@ public class Game {
         }
 
     }
-
-
-
 
     public boolean checkForMoves() {
 
@@ -228,18 +218,20 @@ public class Game {
 
     public boolean ended() {
 
-        return false;
-    }
+        boolean ended;
 
-    public void switchPlayer(String coor) {
+        current = current == first ? second : first;
+        ended = !checkForMoves();
+        current = current == first ? second : first;
+        ended |= !checkForMoves();
 
-        if (board.isValid(coor, current.getColor())) {
-            current = current == first ? second : first;
+        if (ended) {
+            System.out.println("game has ended");
+        } else {
+            System.out.println("game has not ended");
         }
+        return ended;
     }
 
 
-    private void save() {
-
-    }
 }

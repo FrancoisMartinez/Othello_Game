@@ -1,8 +1,13 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
+
 
 public class Board {
 
-    private final Scanner s = new Scanner(System.in);
+    private final static Scanner s = new Scanner(System.in);
+
     private String name;
     private Position[][] boardPieces;
 
@@ -11,13 +16,6 @@ public class Board {
         name = "";
         boardPieces = new Position[8][8];
         initializeBoard("1");
-    }
-    public Board(String name, Position[][] boardPieces) {
-
-    }
-    public Board(Board board) {
-        this.setName(board.name);
-        this.setBoardPieces(board.boardPieces);
     }
 
 
@@ -44,6 +42,91 @@ public class Board {
         }
         return copy;
     }
+
+
+    //draw board with coordinates
+    public void drawboard() {
+
+        System.out.print(" ");
+        for(char c = 'A'; c <= 'H'; c++) {
+            System.out.print(" " + c);
+        }
+        System.out.println();
+        for (int row = 0; row < 8; row++) {
+            System.out.print(row + 1);
+            for (int col = 0; col < 8; col++) {
+                System.out.print(" " + boardPieces[row][col]);
+            }
+            System.out.println();
+        }
+    }
+
+
+    //load the board from saved file
+    public Board(String saveFile) {
+
+        boardPieces = new Position[8][8];
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                boardPieces[row][col] = new PlayablePosition();
+            }
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(saveFile))) {
+
+            String line;
+            int i = 0;
+
+            while ((line = reader.readLine()) != null) {
+
+                if (i > 2) {
+                    for (int j = 0; j < line.length(); j++) {
+
+                        if (line.charAt(j) == Position.BLACK) {
+                            boardPieces[i - 3][j].setPiece(Position.BLACK);
+                        } else if (line.charAt(j) == Position.WHITE) {
+                            boardPieces[i - 3][j].setPiece(Position.WHITE);
+                        } else if (line.charAt(j) == UnplayablePosition.UNPLAYABLE) {
+                            boardPieces[i - 3][j].setPiece(UnplayablePosition.UNPLAYABLE);
+                        }  else if (line.charAt(j) == Position.EMPTY) {
+                            boardPieces[i - 3][j].setPiece(Position.EMPTY);
+                        }
+                    }
+                }
+                i++;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void takeTurn(String coor, Player current) {
+
+        char color = current.getColor();
+
+        int row = Position.coordinates(coor)[0];
+        int col = Position.coordinates(coor)[1];
+
+
+        //set piece of current player based on coordinate if playable
+        if (boardPieces[row][col].canPlay() && flipPiece(coor, color)) {
+            boardPieces[row][col].setPiece(color);
+
+        } else {
+            System.out.println("unplayable position");
+        }
+
+    }
+
+    public void Game(String name) {
+
+
+
+    }
+
+
+
 
 
 
@@ -92,24 +175,6 @@ public class Board {
         }
     }
 
-
-    //draw board with coordinates
-    public void drawboard() {
-
-        System.out.print(" ");
-        for(char c = 'A'; c <= 'H'; c++) {
-            System.out.print(" " + c);
-        }
-        System.out.println();
-        for (int row = 0; row < 8; row++) {
-            System.out.print(row + 1);
-            for (int col = 0; col < 8; col++) {
-                System.out.print(" " + boardPieces[row][col]);
-            }
-            System.out.println();
-        }
-    }
-
     public boolean isValid(String coor, char color) {
 
         int row = Position.coordinates(coor)[0];
@@ -125,7 +190,7 @@ public class Board {
         //for all direction check if move is playable and converts any piece
 
         //check left
-        if (col > 0) {
+        if (col > 1) {
             j = col - 1;
             while (opposite == boardPieces[row][j].getPiece()) {
                 j -= 1;
@@ -139,7 +204,7 @@ public class Board {
 
 
         //check right
-        if (col < 7) {
+        if (col < 6) {
             j = col + 1;
             while (opposite == boardPieces[row][j].getPiece()) {
                 j += 1;
@@ -152,7 +217,7 @@ public class Board {
 
 
         //check top
-        if (row > 0) {
+        if (row > 1) {
             i = row - 1;
             while (opposite == boardPieces[i][col].getPiece()) {
                 i -= 1;
@@ -165,7 +230,7 @@ public class Board {
 
 
         //check bottom
-        if (row < 7) {
+        if (row < 6) {
             i = row + 1;
             while (opposite == boardPieces[i][col].getPiece()) {
                 i += 1;
@@ -177,7 +242,7 @@ public class Board {
 
 
         //check top left
-        if (row > 0 && col > 0) {
+        if (row > 1 && col > 1) {
             i = row - 1;
             j = col - 1;
             while (opposite == boardPieces[i][j].getPiece()) {
@@ -191,7 +256,7 @@ public class Board {
 
 
         //check top right
-        if (row > 0 && col < 7) {
+        if (row > 1 && col < 6) {
             i = row - 1;
             j = col + 1;
             while (opposite == boardPieces[i][j].getPiece()) {
@@ -205,7 +270,7 @@ public class Board {
 
 
         //check bottom left
-        if (row < 7 && col > 0) {
+        if (row < 6 && col > 1) {
             i = row + 1;
             j = col - 1;
             while (opposite == boardPieces[i][j].getPiece()) {
@@ -218,7 +283,7 @@ public class Board {
         }
 
         //check bottom right
-        if (row < 7 && col < 7) {
+        if (row < 6 && col < 6) {
             i = row + 1;
             j = col + 1;
             while (opposite == boardPieces[i][j].getPiece()) {
@@ -232,7 +297,6 @@ public class Board {
 
         return valid;
     }
-
 
     public boolean flipPiece(String coor, char color) {
 
@@ -412,33 +476,17 @@ public class Board {
         return valid;
     }
 
+    public String toString() {
 
-    public Board(String saveFile) {
+        String board = "";
 
-    }
-
-    public void takeTurn(String coor, Player current) {
-
-        char color = current.getColor();
-
-        int row = Position.coordinates(coor)[0];
-        int col = Position.coordinates(coor)[1];
-
-
-        //set piece of current player based on coordinate if playable
-        if (boardPieces[row][col].canPlay() && flipPiece(coor, color)) {
-            boardPieces[row][col].setPiece(color);
-
-        } else {
-            System.out.println("unplayable position");
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                board += boardPieces[row][col];
+            }
+            board += "\n";
         }
-
+        return board;
     }
-
-
-    //public Game(String name) {
-
-    //}
-
 }
 
