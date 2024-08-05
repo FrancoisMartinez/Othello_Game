@@ -2,12 +2,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Scanner;
 
-//
+//handle creating, saving and displaying the board, changing pieces and checking validity of moves
 public class Board {
-
-    private final static Scanner s = new Scanner(System.in);
 
     private String name;
     private Position[][] boardPieces;
@@ -173,7 +170,6 @@ public class Board {
         }
     }
 
-
     //check if a move is valid
     public boolean isValid(String coor, char color) {
 
@@ -193,6 +189,7 @@ public class Board {
         //by checking if adjacent pieces are of opposite color and there is a piece of same color at the end
 
         //check left
+        //check for piece of opposite color to the left and when arriving to a piece of not opposite color, check if same color
         if (col > 1) {
             j = col - 1;
             while (j > 0 && opposite == boardPieces[row][j].getPiece()) {
@@ -203,8 +200,6 @@ public class Board {
 
             }
         }
-
-
 
         //check right
         if (col < 6) {
@@ -217,8 +212,6 @@ public class Board {
             }
         }
 
-
-
         //check top
         if (row > 1) {
             i = row - 1;
@@ -230,8 +223,6 @@ public class Board {
             }
         }
 
-
-
         //check bottom
         if (row < 6) {
             i = row + 1;
@@ -242,7 +233,6 @@ public class Board {
                 valid = true;
             }
         }
-
 
         //check top left
         if (row > 1 && col > 1) {
@@ -257,7 +247,6 @@ public class Board {
             }
         }
 
-
         //check top right
         if (row > 1 && col < 6) {
             i = row - 1;
@@ -270,7 +259,6 @@ public class Board {
                 valid = true;
             }
         }
-
 
         //check bottom left
         if (row < 6 && col > 1) {
@@ -317,85 +305,79 @@ public class Board {
         //for all direction check if move is playable and converts any piece
 
         //check left
-        if (col > 0) {
+        //same logic as isValid and if isValid, flip the color of the pieces
+        if (col > 1) {
             j = col - 1;
-            while (opposite == boardPieces[row][j].getPiece()) {
+            while (j > 0 && opposite == boardPieces[row][j].getPiece()) {
                 j -= 1;
             }
             if (boardPieces[row][j].getPiece() == color && j != col && j != col - 1 ) {
                 valid = true;
 
                 j = col - 1;
-                while (opposite == boardPieces[row][j].getPiece()) {
+                while (j > 0 && opposite == boardPieces[row][j].getPiece()) {
                     boardPieces[row][j].setPiece(color);
                     j -= 1;
                 }
             }
         }
 
-
-
         //check right
-        if (col < 7) {
+        if (col < 6) {
             j = col + 1;
-            while (opposite == boardPieces[row][j].getPiece()) {
+            while (j < 7 && opposite == boardPieces[row][j].getPiece()) {
                 j += 1;
             }
             if (boardPieces[row][j].getPiece() == color && j != col && j != col + 1) {
                 valid = true;
 
                 j = col + 1;
-                while (opposite == boardPieces[row][j].getPiece()) {
+                while (j < 7 && opposite == boardPieces[row][j].getPiece()) {
                     boardPieces[row][j].setPiece(color);
                     j += 1;
                 }
             }
         }
 
-
-
         //check top
-        if (row > 0) {
+        if (row > 1) {
             i = row - 1;
-            while (opposite == boardPieces[i][col].getPiece()) {
+            while (i > 0 && opposite == boardPieces[i][col].getPiece()) {
                 i -= 1;
             }
             if (boardPieces[i][col].getPiece() == color && i != row && i != row - 1 ) {
                 valid = true;
 
                 i = row - 1;
-                while (opposite == boardPieces[i][col].getPiece()) {
+                while (i > 0 && opposite == boardPieces[i][col].getPiece()) {
                     boardPieces[i][col].setPiece(color);
                     i -= 1;
                 }
             }
         }
 
-
-
         //check bottom
-        if (row < 7) {
+        if (row < 6) {
             i = row + 1;
-            while (opposite == boardPieces[i][col].getPiece()) {
+            while (i < 7 && opposite == boardPieces[i][col].getPiece()) {
                 i += 1;
             }
             if (boardPieces[i][col].getPiece() == color && i != row && i != row + 1 ) {
                 valid = true;
 
                 i = row + 1;
-                while (opposite == boardPieces[i][col].getPiece()) {
+                while (i < 7 && opposite == boardPieces[i][col].getPiece()) {
                     boardPieces[i][col].setPiece(color);
                     i += 1;
                 }
             }
         }
 
-
         //check top left
-        if (row > 0 && col > 0) {
+        if (row > 1 && col > 1) {
             i = row - 1;
             j = col - 1;
-            while (opposite == boardPieces[i][j].getPiece()) {
+            while (i > 0 && j > 0 && opposite == boardPieces[i][j].getPiece()) {
                 i -= 1;
                 j -= 1;
             }
@@ -404,7 +386,7 @@ public class Board {
 
                 i = row - 1;
                 j = col - 1;
-                while (opposite == boardPieces[i][j].getPiece()) {
+                while (i > 0 && j > 0 && opposite == boardPieces[i][j].getPiece()) {
                     boardPieces[i][j].setPiece(color);
                     i -= 1;
                     j -= 1;
@@ -412,12 +394,11 @@ public class Board {
             }
         }
 
-
         //check top right
-        if (row > 0 && col < 7) {
+        if (row > 1 && col < 6) {
             i = row - 1;
             j = col + 1;
-            while (opposite == boardPieces[i][j].getPiece()) {
+            while (i > 0 && j < 7 && opposite == boardPieces[i][j].getPiece()) {
                 i -= 1;
                 j += 1;
             }
@@ -426,7 +407,7 @@ public class Board {
 
                 i = row - 1;
                 j = col + 1;
-                while (opposite == boardPieces[i][j].getPiece()) {
+                while (i > 0 && j < 7 &&opposite == boardPieces[i][j].getPiece()) {
                     boardPieces[i][j].setPiece(color);
                     i -= 1;
                     j += 1;
@@ -434,12 +415,11 @@ public class Board {
             }
         }
 
-
         //check bottom left
-        if (row < 7 && col > 0) {
+        if (row < 6 && col > 1) {
             i = row + 1;
             j = col - 1;
-            while (opposite == boardPieces[i][j].getPiece()) {
+            while (i < 7 && j > 0 && opposite == boardPieces[i][j].getPiece()) {
                 i += 1;
                 j -= 1;
             }
@@ -448,7 +428,7 @@ public class Board {
 
                 i = row + 1;
                 j = col - 1;
-                while (opposite == boardPieces[i][j].getPiece()) {
+                while (i < 7 && j > 0 && opposite == boardPieces[i][j].getPiece()) {
                     boardPieces[i][j].setPiece(color);
                     i += 1;
                     j -= 1;
@@ -457,10 +437,10 @@ public class Board {
         }
 
         //check bottom right
-        if (row < 7 && col < 7) {
+        if (row < 6 && col < 6) {
             i = row + 1;
             j = col + 1;
-            while (opposite == boardPieces[i][j].getPiece()) {
+            while (i < 7 && j < 7 && opposite == boardPieces[i][j].getPiece()) {
                 i += 1;
                 j += 1;
             }
@@ -469,28 +449,27 @@ public class Board {
 
                 i = row + 1;
                 j = col + 1;
-                while (opposite == boardPieces[i][j].getPiece()) {
+                while (i < 7 && j < 7 && opposite == boardPieces[i][j].getPiece()) {
                     boardPieces[i][j].setPiece(color);
                     i += 1;
                     j += 1;
                 }
             }
         }
-
         return valid;
     }
 
+    //toString method for saving the board
     public String toString() {
 
-        String board = "";
+        StringBuilder board = new StringBuilder();
 
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                board += boardPieces[row][col];
+                board.append(boardPieces[row][col]);
             }
-            board += "\n";
+            board.append("\n");
         }
-        return board;
+        return board.toString();
     }
 }
-

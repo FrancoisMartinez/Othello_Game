@@ -1,3 +1,4 @@
+
 public class PlayablePosition extends Position {
 
     public PlayablePosition() {

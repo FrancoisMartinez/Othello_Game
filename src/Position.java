@@ -1,3 +1,5 @@
+
+//positions of pieces
 abstract public class Position {
 
     private char piece;
