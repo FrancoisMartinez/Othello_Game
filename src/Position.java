@@ -30,7 +30,7 @@ abstract public class Position {
         return "" + piece;
     }
 
-    //get row and col from coordinate
+    //get row and col from coordinate input of users
     public static int[] coordinates(String coor) {
         int[] xy = new int[2];
         xy[0] = Character.getNumericValue(coor.charAt(1)) - 1;
