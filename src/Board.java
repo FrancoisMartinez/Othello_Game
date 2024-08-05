@@ -45,7 +45,7 @@ public class Board {
 
 
     //draw board with coordinates
-    public void drawboard() {
+    public void drawBoard() {
 
         System.out.print(" ");
         for(char c = 'A'; c <= 'H'; c++) {
@@ -71,6 +71,10 @@ public class Board {
                 boardPieces[row][col] = new PlayablePosition();
             }
         }
+        for (int row = 2; row < 6; row++) {
+            boardPieces[row][7] = new UnplayablePosition();
+        }
+
 
         try (BufferedReader reader = new BufferedReader(new FileReader(saveFile))) {
 
@@ -192,7 +196,7 @@ public class Board {
         //check left
         if (col > 1) {
             j = col - 1;
-            while (opposite == boardPieces[row][j].getPiece()) {
+            while (j > 0 && opposite == boardPieces[row][j].getPiece()) {
                 j -= 1;
             }
             if (boardPieces[row][j].getPiece() == color && j != col && j != col - 1 ) {
@@ -206,7 +210,7 @@ public class Board {
         //check right
         if (col < 6) {
             j = col + 1;
-            while (opposite == boardPieces[row][j].getPiece()) {
+            while (j < 7 && opposite == boardPieces[row][j].getPiece()) {
                 j += 1;
             }
             if (boardPieces[row][j].getPiece() == color && j != col && j != col + 1) {
@@ -219,7 +223,7 @@ public class Board {
         //check top
         if (row > 1) {
             i = row - 1;
-            while (opposite == boardPieces[i][col].getPiece()) {
+            while (i >0 && opposite == boardPieces[i][col].getPiece()) {
                 i -= 1;
             }
             if (boardPieces[i][col].getPiece() == color && i != row && i != row - 1 ) {
@@ -232,7 +236,7 @@ public class Board {
         //check bottom
         if (row < 6) {
             i = row + 1;
-            while (opposite == boardPieces[i][col].getPiece()) {
+            while (i < 7 && opposite == boardPieces[i][col].getPiece()) {
                 i += 1;
             }
             if (boardPieces[i][col].getPiece() == color && i != row && i != row + 1 ) {
@@ -245,7 +249,7 @@ public class Board {
         if (row > 1 && col > 1) {
             i = row - 1;
             j = col - 1;
-            while (opposite == boardPieces[i][j].getPiece()) {
+            while (i > 0 && j > 0 && opposite == boardPieces[i][j].getPiece()) {
                 i -= 1;
                 j -= 1;
             }
@@ -259,7 +263,7 @@ public class Board {
         if (row > 1 && col < 6) {
             i = row - 1;
             j = col + 1;
-            while (opposite == boardPieces[i][j].getPiece()) {
+            while (i > 0 && j < 7 &&opposite == boardPieces[i][j].getPiece()) {
                 i -= 1;
                 j += 1;
             }
@@ -273,7 +277,7 @@ public class Board {
         if (row < 6 && col > 1) {
             i = row + 1;
             j = col - 1;
-            while (opposite == boardPieces[i][j].getPiece()) {
+            while (i < 7 && j > 0 && opposite == boardPieces[i][j].getPiece()) {
                 i += 1;
                 j -= 1;
             }
@@ -286,7 +290,7 @@ public class Board {
         if (row < 6 && col < 6) {
             i = row + 1;
             j = col + 1;
-            while (opposite == boardPieces[i][j].getPiece()) {
+            while (i < 7 && j < 7 && opposite == boardPieces[i][j].getPiece()) {
                 i += 1;
                 j += 1;
             }

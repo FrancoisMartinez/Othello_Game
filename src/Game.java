@@ -85,12 +85,12 @@ public class Game {
     public void play() {
 
 
-        boolean end = ended();
+        boolean end = false;
 
 
-        while (!end) {
+        while (!ended() && !end) {
 
-            board.drawboard();
+            board.drawBoard();
 
             if (!checkForMoves()) {
                 System.out.printf("""
@@ -144,12 +144,14 @@ public class Game {
                         if (board.isValid(coor, current.getColor())) {
                             board.takeTurn(coor, current);
                             current = current == first ? second : first;
+                        } else {
+                            System.out.println("Invalid move");
                         }
                     }
                     default -> System.out.println("Invalid input");
                 }
             }
-            end = ended();
+
         }
     }
 
@@ -158,7 +160,7 @@ public class Game {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             writer.write(first.getName());
             writer.newLine();
-            writer.write(first.getName());
+            writer.write(second.getName());
             writer.newLine();
             writer.write(current.getName());
             writer.newLine();
@@ -173,22 +175,6 @@ public class Game {
 
 
 
-    public void makeMove(String coor) {
-
-        int row = Position.coordinates(coor)[0];
-        int col = Position.coordinates(coor)[1];
-
-
-        //set piece of current player based on coordinate if playable
-        if (board.getBoardPieces()[row][col].canPlay() && board.flipPiece(coor, (current == first ? Position.BLACK : Position.WHITE))) {
-            board.getBoardPieces()[row][col].setPiece((current.equals(first) ? Position.BLACK : Position.WHITE));
-
-        } else {
-            System.out.println("unplayable position");
-        }
-
-    }
-
     public boolean checkForMoves() {
 
         boolean hasMove = false;
@@ -201,7 +187,7 @@ public class Game {
             }
         }
 
-        //check for all coordinates if ther is a valid move
+        //check for all coordinates if there is a valid move
         outerLoop:
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
@@ -216,6 +202,7 @@ public class Game {
         return hasMove;
     }
 
+
     public boolean ended() {
 
         boolean ended;
@@ -226,10 +213,36 @@ public class Game {
         ended |= !checkForMoves();
 
         if (ended) {
-            System.out.println("game has ended");
-        } else {
-            System.out.println("game has not ended");
+            int black = 0;
+            int white = 0;
+
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    if (board.getBoardPieces()[i][j].getPiece() == Position.BLACK) {
+                        black++;
+                    } else if (board.getBoardPieces()[i][j].getPiece() == Position.WHITE) {
+                        white++;
+                    }
+                }
+            }
+
+            String winner = "";
+
+            boolean tie = false;
+
+            if (black > white) winner = first.getName();
+            else if (white > black) winner = second.getName();
+            else if (white == black) tie = true;
+
+            board.drawBoard();
+
+            if (tie) {
+                System.out.println("The game has ended in a tie.\n" + first.getName() + ": " + black + "\n" + second.getName() + ": " + white);
+            } else {
+                System.out.println("The game has ended.\n" + winner + " won the game\n" + first.getName() + ": " + black + "\n" + second.getName() + ": " + white);
+            }
         }
+
         return ended;
     }
 
