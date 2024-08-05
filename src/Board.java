@@ -1,9 +1,10 @@
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
-
+//
 public class Board {
 
     private final static Scanner s = new Scanner(System.in);
@@ -11,28 +12,14 @@ public class Board {
     private String name;
     private Position[][] boardPieces;
 
-    //constructors
+    //default constructor initializing with standard starting position
     public Board() {
         name = "";
         boardPieces = new Position[8][8];
         initializeBoard("1");
     }
 
-
-    //setters/getters
-    public void setName(String name) {
-        this.name = name;
-    }
-    public void  setBoardPieces(Position[][] boardPieces) {
-        for (int row = 0; row < 9; row++) {
-            for (int col = 0; col < 9; col++) {
-                this.boardPieces[row][col] = boardPieces[row][col];
-            }
-        }
-    }
-    public String getName() {
-        return name;
-    }
+    //getter for boardPiece by creating a deep copy
     public Position[][] getBoardPieces() {
         Position[][] copy = new Position[8][8];
         for (int row = 0; row < 8; row++) {
@@ -47,10 +34,12 @@ public class Board {
     //draw board with coordinates
     public void drawBoard() {
 
+        //columns
         System.out.print(" ");
         for(char c = 'A'; c <= 'H'; c++) {
             System.out.print(" " + c);
         }
+        //displaying each row
         System.out.println();
         for (int row = 0; row < 8; row++) {
             System.out.print(row + 1);
@@ -65,6 +54,9 @@ public class Board {
     //load the board from saved file
     public Board(String saveFile) {
 
+        name = saveFile;
+
+        //initializing a Position array for the board piece and creating its new positions
         boardPieces = new Position[8][8];
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
@@ -76,11 +68,13 @@ public class Board {
         }
 
 
+
         try (BufferedReader reader = new BufferedReader(new FileReader(saveFile))) {
 
             String line;
             int i = 0;
 
+            //reading the board from the file and copying it to the game board
             while ((line = reader.readLine()) != null) {
 
                 if (i > 2) {
@@ -105,6 +99,8 @@ public class Board {
         }
     }
 
+
+    //make the move for player
     public void takeTurn(String coor, Player current) {
 
         char color = current.getColor();
@@ -123,19 +119,16 @@ public class Board {
 
     }
 
+    //did not find a use for this method
     public void Game(String name) {
-
-
-
     }
-
-
-
 
 
 
     //initialize board with default starting position and unplayable positions
     public void initializeBoard(String pos) {
+
+        //initialize board and its positions
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 boardPieces[row][col] = new PlayablePosition();
@@ -145,6 +138,7 @@ public class Board {
             boardPieces[row][7] = new UnplayablePosition();
         }
 
+        //set starting pieces according to starting position chosen
         switch (pos) {
             case "1" -> {
                 boardPieces[3][3].setPiece(Position.WHITE);
@@ -179,11 +173,15 @@ public class Board {
         }
     }
 
+
+    //check if a move is valid
     public boolean isValid(String coor, char color) {
 
+        //get position of move
         int row = Position.coordinates(coor)[0];
         int col = Position.coordinates(coor)[1];
 
+        //variable used to in different direction
         int i;
         int j;
 
@@ -192,6 +190,7 @@ public class Board {
         boolean valid = false;
 
         //for all direction check if move is playable and converts any piece
+        //by checking if adjacent pieces are of opposite color and there is a piece of same color at the end
 
         //check left
         if (col > 1) {
@@ -302,6 +301,7 @@ public class Board {
         return valid;
     }
 
+    //used same logic from isValid and switch the color of middle piece when move was valid
     public boolean flipPiece(String coor, char color) {
 
         int row = Position.coordinates(coor)[0];

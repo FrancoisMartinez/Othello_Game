@@ -1,3 +1,4 @@
+
 import java.util.Scanner;
 
 //complete Othello game with saving and loading ability

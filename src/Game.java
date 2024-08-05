@@ -1,3 +1,4 @@
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.BufferedReader;
@@ -5,9 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
-
-
-//handle
+//handle creating a new game, loading a game, saving a game, and playing it (checking for moves and for a winner)
 public class Game {
 
     private static final Scanner s = new Scanner(System.in);
