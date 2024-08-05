@@ -98,7 +98,7 @@ public class Game {
         boolean end = false;
 
 
-        while (!ended() && !end) {
+        while ((!end) && (!ended())) {
 
             board.drawBoard();
 
@@ -124,6 +124,7 @@ public class Game {
                     case "2" -> {
                         end = true;
                         System.out.println(current + " has conceded the game.");
+                        System.exit(0);
                     }
                     //next turn
                     case "3" -> {
@@ -154,6 +155,7 @@ public class Game {
                     case "2" -> {
                         end = true;
                         System.out.println(current + " has conceded the game.");
+                        System.exit(0);
                     }
                     //play
                     case "3" -> {
@@ -170,7 +172,6 @@ public class Game {
                     default -> System.out.println("Invalid input");
                 }
             }
-
         }
     }
 
