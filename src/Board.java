@@ -1,5 +1,6 @@
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -91,7 +92,10 @@ public class Board {
                 i++;
             }
 
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File not found. Please check the file path and try again.");
         } catch (IOException e) {
+            System.out.println("Error: An I/O error occurred while loading the game.");
             e.printStackTrace();
         }
     }

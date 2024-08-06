@@ -1,9 +1,5 @@
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 //handle creating a new game, loading a game, saving a game, and playing it (checking for moves and for a winner)
@@ -81,7 +77,10 @@ public class Game {
                 }
                 i++;
             }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File not found. Please check the file path and try again.");
         } catch (IOException e) {
+            System.out.println("Error: An I/O error occurred while loading the game.");
             e.printStackTrace();
         }
 

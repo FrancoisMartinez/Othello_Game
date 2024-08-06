@@ -14,34 +14,42 @@ public class Driver {
 
         String in = s.nextLine();
 
-        do {
-            switch (in) {
-                //Start new game
-                case "1" -> {
+        try {
+            do {
+                switch (in) {
+                    //Start new game
+                    case "1" -> {
 
-                    System.out.println("Starting a new game...");
-                    System.out.println("Player 1: ");
-                    String p1 = s.nextLine();
-                    System.out.println("Player 2: ");
-                    String p2 = s.nextLine();
+                        System.out.println("Starting a new game...");
+                        System.out.println("Player 1: ");
+                        String p1 = s.nextLine();
+                        System.out.println("Player 2: ");
+                        String p2 = s.nextLine();
 
-                    Game game = new Game(new Player(p1, Position.BLACK), new Player(p2, Position.WHITE));
+                        Game game = new Game(new Player(p1, Position.BLACK), new Player(p2, Position.WHITE));
 
-                    game.start();
+                        game.start();
+                    }
+                    //Quit
+                    case "2" -> {
+                        System.out.println("Quiting...");
+                        System.exit(0);
+                    }
+                    //Load
+                    case "3" -> {
+                        Game.load();
+                    }
+                    default -> System.out.println("Invalid input, enter a number from 1 to 3.");
                 }
-                //Quit
-                case "2" -> {
-                    System.out.println("Quiting...");
-                    System.exit(0);
-                }
-                //Load
-                case "3" -> {
-                    Game.load();
-                }
-                default -> System.out.println("Invalid input, enter a number from 1 to 3.");
-            }
-        //ask again if input is invalid
-        } while (!in.equals("1") && !in.equals("2") && !in.equals("3"));
+                //ask again if input is invalid
+            } while (!in.equals("1") && !in.equals("2") && !in.equals("3"));
+
+        } catch (Exception e) {
+            System.out.println("Something went wrong here...");
+            e.printStackTrace();
+        } finally {
+            s.close();
+        }
 
 
     }
